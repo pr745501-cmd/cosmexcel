@@ -12,7 +12,6 @@ import { registerGsap } from "@/lib/gsap";
 import { sceneState } from "@/lib/scroll";
 import { event } from "@/data/event";
 
-// The 3D bundle (three + R3F + drei) loads only on the client and never blocks first paint.
 const HeroScene = dynamic(() => import("@/components/3d/HeroScene"), {
   ssr: false,
   loading: () => <ScenePoster className="absolute inset-0" />,
@@ -83,9 +82,9 @@ export function Hero() {
         }}
       />
 
-      {/* Wordmark sits behind the 3D still-life so the vessels overlap it */}
-      <div data-hero-title className="absolute inset-x-0 top-[14svh] z-10 px-3 text-center sm:top-[15svh]">
-        <h1 id="hero-title" aria-label="Cosmexcel 2027" className="font-display text-[clamp(2.7rem,15.4vw,17.5rem)] leading-[0.86] font-medium tracking-[-0.02em] text-ivory">
+      {/* Wordmark */}
+      <div data-hero-title className="absolute inset-x-0 top-[12svh] z-10 px-3 text-center sm:top-[15svh]">
+        <h1 id="hero-title" aria-label="Cosmexcel 2027" className="font-display text-[clamp(2.2rem,14vw,17.5rem)] leading-[0.86] font-medium tracking-[-0.02em] text-ivory">
           {WORD.map((ch, i) => (
             <span key={i} aria-hidden className="inline-block overflow-hidden pb-[0.08em] align-bottom">
               <span data-letter className="inline-block">
@@ -101,30 +100,35 @@ export function Hero() {
         {quality === "none" ? <ScenePoster className="absolute inset-0" /> : <HeroScene quality={quality} animate={!reduced} />}
       </div>
 
-      {/* Legibility veil for the lower information band */}
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 z-[25] h-[58%] bg-gradient-to-t from-night via-night/80 to-transparent sm:h-[46%]" />
+      {/* Legibility veil */}
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 z-[25] h-[65%] bg-gradient-to-t from-night via-night/85 to-transparent sm:h-[52%]" />
 
-      <div className="relative z-30 mx-auto flex min-h-[100svh] max-w-[1500px] flex-col justify-end px-5 pt-32 pb-8 sm:px-8 lg:px-12 lg:pb-12">
-        <div className="grid items-end gap-8 lg:grid-cols-12 lg:gap-10">
+      {/* Content band */}
+      <div className="relative z-30 mx-auto flex min-h-[100svh] max-w-[1500px] flex-col justify-end px-4 pt-28 pb-6 sm:px-8 sm:pb-8 lg:px-12 lg:pb-12">
+        <div className="grid items-end gap-6 sm:gap-8 lg:grid-cols-12 lg:gap-10">
+
+          {/* Tagline block */}
           <div data-hero-in className="lg:col-span-5">
-            <p aria-hidden className="font-display text-[clamp(4rem,8vw,7.5rem)] leading-[0.85] text-champagne italic">2027</p>
-            <p className="mt-4 font-display text-[clamp(1.9rem,3.4vw,3.1rem)] leading-[1.05] text-ivory italic">{event.tagline}</p>
-            <p className="mt-3 text-[0.85rem] font-medium tracking-[0.24em] text-ivory uppercase">{event.title}</p>
-            <p className="mt-4 hidden max-w-md text-[0.95rem] leading-relaxed text-ivory/75 sm:block">{event.summary}</p>
+            <p aria-hidden className="font-display text-[clamp(3rem,8vw,7.5rem)] leading-[0.85] text-champagne italic">2027</p>
+            <p className="mt-3 font-display text-[clamp(1.5rem,3.4vw,3.1rem)] leading-[1.05] text-ivory italic">{event.tagline}</p>
+            <p className="mt-2 text-[0.8rem] font-medium tracking-[0.22em] text-ivory uppercase">{event.title}</p>
+            <p className="mt-3 max-w-md text-[0.9rem] leading-relaxed text-ivory/75 sm:block">{event.summary}</p>
           </div>
 
-          <ul data-hero-in className="space-y-3 text-ivory lg:col-span-3">
+          {/* Event meta */}
+          <ul data-hero-in className="space-y-2 text-ivory lg:col-span-3">
             <li className="flex items-center gap-3">
               <CalendarDays aria-hidden className="h-5 w-5 shrink-0 text-gold" strokeWidth={1.5} />
-              <span className="font-medium">{event.dateLabel}</span>
+              <span className="text-sm font-medium sm:text-base">{event.dateLabel}</span>
             </li>
             <li className="flex items-center gap-3">
               <MapPin aria-hidden className="h-5 w-5 shrink-0 text-gold" strokeWidth={1.5} />
-              <span className="font-medium">{event.venue}</span>
+              <span className="text-sm font-medium sm:text-base">{event.venue}</span>
             </li>
           </ul>
 
-          <div data-hero-in className="flex flex-col gap-6 lg:col-span-4 lg:items-end">
+          {/* Countdown + CTAs */}
+          <div data-hero-in className="flex flex-col gap-5 lg:col-span-4 lg:items-end">
             <Countdown target={event.startsAt} />
             <div className="flex flex-wrap gap-3">
               <MagneticButton href="#registration">Register now</MagneticButton>
@@ -133,6 +137,7 @@ export function Hero() {
               </MagneticButton>
             </div>
           </div>
+
         </div>
       </div>
     </section>

@@ -29,6 +29,7 @@ html {
   scroll-padding-top: 5.5rem;
   background: var(--color-night);
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
@@ -40,9 +41,28 @@ body {
   line-height: 1.7;
   color: var(--color-ink);
   background: var(--color-ivory);
-  overflow-x: clip;
+  overflow-x: hidden;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  /* Prevent content from being hidden behind notches/home bars on iOS/Android */
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Ensure all interactive elements have a comfortable tap target */
+button, a, [role="button"] {
+  touch-action: manipulation;
+}
+
+/* Prevent horizontal overflow on all elements */
+*, *::before, *::after {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+img, video, svg {
+  max-width: 100%;
+  height: auto;
 }
 
 ::selection { background: var(--color-champagne); color: var(--color-aubergine); }

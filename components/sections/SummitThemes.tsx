@@ -26,38 +26,77 @@ export function SummitThemes() {
 
   return (
     <section id="experience" aria-labelledby="themes-title" className="relative bg-cream">
-      <div className="mx-auto max-w-[1500px] px-5 py-24 sm:px-8 md:py-32 lg:px-12">
+      <div className="mx-auto max-w-[1500px] px-4 py-20 sm:px-8 md:py-28 lg:px-12">
         <Reveal>
-          <SectionHeading id="themes-title" title={<>What you’ll <em className="font-medium text-gold-deep">gain</em> at this summit</>} lead="At this summit, participants will gain insights into:" />
+          <SectionHeading
+            id="themes-title"
+            title={<>What you&apos;ll <em className="font-medium text-gold-deep">gain</em> at this summit</>}
+            lead="At this summit, participants will gain insights into:"
+          />
         </Reveal>
 
-        <div className="mt-16 grid gap-10 lg:mt-20 lg:grid-cols-12 lg:gap-16">
-          {/* Index: hover/focus selects on desktop; a plain editorial list on touch-sized screens */}
+        <div className="mt-12 grid gap-8 lg:mt-16 lg:grid-cols-12 lg:gap-16">
+          {/* Theme list — interactive on desktop, tap-to-expand on mobile */}
           <ul className="lg:col-span-6">
             {themes.map((theme, i) => {
               const Icon = ICONS[theme.id];
               const isActive = i === active;
               return (
                 <li key={theme.id} className="border-b border-gold/30 first:border-t">
+                  {/* Mobile: tappable button that expands an inline detail panel */}
                   <button
                     type="button"
-                    aria-pressed={isActive}
-                    onClick={() => setActive(i)}
+                    aria-expanded={isActive}
+                    onClick={() => setActive(isActive ? active : i)}
                     onPointerEnter={(e) => e.pointerType === "mouse" && setActive(i)}
                     onFocus={() => setActive(i)}
-                    className="group relative flex min-h-[4.5rem] w-full items-center gap-5 py-5 text-left max-lg:pointer-events-none sm:gap-7"
+                    className="group relative flex min-h-[4.5rem] w-full items-center gap-4 py-4 text-left sm:gap-5 sm:py-5"
                   >
-                    <span className={cn("font-display text-3xl tabular transition-colors duration-500 sm:text-4xl", isActive ? "text-gold-deep" : "text-gold/70")}>{theme.index}</span>
-                    <span className={cn("flex-1 text-[1.05rem] font-medium transition-[color,transform] duration-500 ease-[var(--ease-lux)] sm:text-lg", isActive ? "translate-x-1 text-aubergine" : "text-ink/80 group-hover:text-aubergine")}>{theme.title}</span>
-                    <Icon aria-hidden strokeWidth={1.4} className={cn("h-7 w-7 shrink-0 transition-colors duration-500", isActive ? "text-gold-deep" : "text-gold/60")} />
+                    <span className={cn("font-display text-2xl tabular transition-colors duration-500 sm:text-3xl", isActive ? "text-gold-deep" : "text-gold/70")}>
+                      {theme.index}
+                    </span>
+                    <span className={cn("flex-1 text-[0.95rem] font-medium transition-[color,transform] duration-500 ease-[var(--ease-lux)] sm:text-[1.05rem]", isActive ? "translate-x-1 text-aubergine" : "text-ink/80 group-hover:text-aubergine")}>
+                      {theme.title}
+                    </span>
+                    <Icon aria-hidden strokeWidth={1.4} className={cn("h-6 w-6 shrink-0 transition-colors duration-500 sm:h-7 sm:w-7", isActive ? "text-gold-deep" : "text-gold/60")} />
                     <span aria-hidden className={cn("absolute bottom-[-1px] left-0 h-px bg-gold-deep transition-[width] duration-700 ease-[var(--ease-lux)]", isActive ? "w-full" : "w-0")} />
                   </button>
+
+                  {/* Inline mobile detail card — only shown on non-lg screens */}
+                  <AnimatePresence initial={false}>
+                    {isActive && (
+                      <motion.div
+                        key={`mobile-detail-${theme.id}`}
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                        className="overflow-hidden lg:hidden"
+                      >
+                        <div className="on-dark mb-4 bg-aubergine p-6 text-ivory relative overflow-hidden">
+                          <div
+                            aria-hidden
+                            className="pointer-events-none absolute -top-16 -right-16 h-48 w-48 rounded-full"
+                            style={{ background: "radial-gradient(circle, rgba(184,138,75,0.28), transparent 68%)" }}
+                          />
+                          <div className="relative flex items-center justify-between">
+                            <span className="font-display text-[4rem] leading-none text-champagne/90 tabular">{theme.index}</span>
+                            <span className="flex h-14 w-14 items-center justify-center rounded-full border border-dashed border-gold/60">
+                              <ActiveIcon aria-hidden strokeWidth={1.1} className="h-7 w-7 text-champagne" />
+                            </span>
+                          </div>
+                          <h3 className="relative mt-4 font-display text-[1.8rem] leading-[1.05] text-ivory">{theme.title}</h3>
+                          <div className="relative mt-5 h-px w-full bg-gradient-to-r from-gold to-transparent" />
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </li>
               );
             })}
           </ul>
 
-          {/* Desktop stage */}
+          {/* Desktop stage — hidden on mobile, shown on lg+ */}
           <div className="hidden lg:col-span-6 lg:block">
             <div className="on-dark sticky top-28 overflow-hidden bg-aubergine p-12 text-ivory shadow-[var(--shadow-soft)]">
               <motion.div
@@ -83,16 +122,35 @@ export function SummitThemes() {
                   </motion.span>
                 </AnimatePresence>
                 <span className="relative mt-3 flex h-24 w-24 items-center justify-center">
-                  <motion.span aria-hidden className="absolute inset-0 rounded-full border border-dashed border-gold/60" animate={{ rotate: 360 }} transition={{ duration: 40, ease: "linear", repeat: Infinity }} />
+                  <motion.span
+                    aria-hidden
+                    className="absolute inset-0 rounded-full border border-dashed border-gold/60"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 40, ease: "linear", repeat: Infinity }}
+                  />
                   <AnimatePresence mode="wait">
-                    <motion.span key={current.id} initial={{ opacity: 0, scale: 0.6, rotate: -30 }} animate={{ opacity: 1, scale: 1, rotate: 0 }} exit={{ opacity: 0, scale: 0.8 }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
+                    <motion.span
+                      key={current.id}
+                      initial={{ opacity: 0, scale: 0.6, rotate: -30 }}
+                      animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                    >
                       <ActiveIcon aria-hidden strokeWidth={1.1} className="h-11 w-11 text-champagne" />
                     </motion.span>
                   </AnimatePresence>
                 </span>
               </div>
               <AnimatePresence mode="wait">
-                <motion.h3 key={current.id} aria-live="polite" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} className="relative mt-6 font-display text-[2.6rem] leading-[1.05]">
+                <motion.h3
+                  key={current.id}
+                  aria-live="polite"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  className="relative mt-6 font-display text-[2.6rem] leading-[1.05]"
+                >
                   {current.title}
                 </motion.h3>
               </AnimatePresence>
