@@ -11,7 +11,7 @@ interface CountdownProps {
   completedLabel?: string;
 }
 
-const UNITS = ["Days", "Hours", "Minutes", "Seconds"] as const;
+const UNITS = ["Days", "Hours", "Mins", "Secs"] as const;
 
 /** One-second wall-clock store. Server snapshot is 0 so markup matches during hydration. */
 function subscribe(cb: () => void) {
@@ -28,7 +28,7 @@ export function Countdown({ target, className, completedLabel = "The summit is u
   const remaining = Math.max(0, targetSec - now);
 
   if (ready && remaining === 0) {
-    return <p className={cn("font-display text-3xl italic text-champagne", className)}>{completedLabel}</p>;
+    return <p className={cn("font-display text-2xl italic text-champagne", className)}>{completedLabel}</p>;
   }
 
   const parts = [
@@ -42,15 +42,15 @@ export function Countdown({ target, className, completedLabel = "The summit is u
     : "Countdown to Cosmexcel 2027";
 
   return (
-    <div className={cn("flex items-end gap-5 sm:gap-8", className)}>
+    <div className={cn("flex items-end gap-3 sm:gap-5", className)}>
       {/* Screen readers get a minute-level label instead of a per-second stream */}
       <p className="sr-only">{label}</p>
       {UNITS.map((unit, i) => (
-        <div key={unit} className="min-w-[3.4rem] sm:min-w-[4.5rem]" aria-hidden>
-          <div className="tabular font-display text-[2.6rem] font-medium leading-none text-ivory sm:text-6xl">
+        <div key={unit} className="min-w-[2.6rem] sm:min-w-[3.6rem]" aria-hidden>
+          <div className="tabular font-display text-[2rem] sm:text-[2.6rem] font-medium leading-none text-ivory">
             {ready ? pad(parts[i]) : "––"}
           </div>
-          <div className="mt-2 text-[0.7rem] tracking-[0.18em] text-champagne/80 uppercase">{unit}</div>
+          <div className="mt-1.5 text-[0.62rem] sm:text-[0.7rem] tracking-[0.14em] sm:tracking-[0.18em] text-champagne/80 uppercase">{unit}</div>
         </div>
       ))}
     </div>

@@ -28,10 +28,10 @@ export function MobileMenu({ open, onClose, active }: Props) {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
       if (e.key !== "Tab" || !panel.current) return;
-      // Keep focus inside the menu + the toggle button above it.
-      const items = [document.querySelector<HTMLElement>("[aria-controls='mobile-menu']"), ...Array.from(panel.current.querySelectorAll<HTMLElement>(FOCUSABLE))].filter(
-        (el): el is HTMLElement => el !== null,
-      );
+      const items = [
+        document.querySelector<HTMLElement>("[aria-controls='mobile-menu']"),
+        ...Array.from(panel.current.querySelectorAll<HTMLElement>(FOCUSABLE)),
+      ].filter((el): el is HTMLElement => el !== null);
       const first = items[0];
       const last = items[items.length - 1];
       if (e.shiftKey && document.activeElement === first) {
@@ -69,10 +69,13 @@ export function MobileMenu({ open, onClose, active }: Props) {
           animate={{ clipPath: "circle(150% at calc(100% - 2.75rem) 2.5rem)" }}
           exit={{ clipPath: "circle(0% at calc(100% - 2.75rem) 2.5rem)", transition: { duration: 0.5, ease: [0.76, 0, 0.24, 1] } }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="on-dark fixed inset-0 z-40 flex flex-col overflow-y-auto bg-night px-6 pt-28 pb-8 lg:hidden"
+          className="on-dark fixed inset-0 z-40 flex flex-col overflow-y-auto bg-night px-5 sm:px-8 pt-24 pb-[calc(2rem+env(safe-area-inset-bottom))] lg:hidden"
         >
+          {/* Decorative rings */}
           <div aria-hidden className="pointer-events-none absolute -right-24 top-1/3 h-[28rem] w-[28rem] rounded-full border border-champagne/15" />
           <div aria-hidden className="pointer-events-none absolute -right-8 top-1/3 h-[22rem] w-[22rem] rounded-full border border-champagne/10" />
+
+          {/* Nav links */}
           <ul className="relative flex flex-1 flex-col justify-center gap-1">
             {navLinks.map((link, i) => (
               <motion.li
@@ -84,7 +87,10 @@ export function MobileMenu({ open, onClose, active }: Props) {
                 <a
                   href={link.href}
                   onClick={(e) => navigate(e, link.href)}
-                  className={cn("flex min-h-14 items-baseline gap-4 font-display text-[2.5rem] leading-tight", active === link.href.slice(1) ? "text-champagne" : "text-ivory")}
+                  className={cn(
+                    "flex min-h-14 items-baseline gap-4 font-display text-[2rem] sm:text-[2.5rem] leading-tight",
+                    active === link.href.slice(1) ? "text-champagne" : "text-ivory",
+                  )}
                 >
                   <span className="w-6 text-xs tracking-widest text-gold">{String(i + 1).padStart(2, "0")}</span>
                   {link.label}
@@ -92,6 +98,8 @@ export function MobileMenu({ open, onClose, active }: Props) {
               </motion.li>
             ))}
           </ul>
+
+          {/* Footer area */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0, transition: { delay: 0.7, duration: 0.6 } }}
@@ -108,7 +116,7 @@ export function MobileMenu({ open, onClose, active }: Props) {
             <p className="mt-5 text-sm text-ivory/70">
               {event.dateLabel} · {event.venue}
             </p>
-            <a href={`mailto:${contact.email}`} className="mt-1 block text-sm text-champagne">
+            <a href={`mailto:${contact.email}`} className="mt-1 block text-sm text-champagne break-all">
               {contact.email}
             </a>
           </motion.div>
