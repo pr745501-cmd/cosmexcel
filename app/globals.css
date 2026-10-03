@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Design tokens — palette drawn from the Cosmexcel 2027 brochure:
+   warm ivory, champagne gold and a deep plum/aubergine.
+------------------------------------------------------------------- */
+@theme {
+  --color-ivory: #f8f2e8;
+  --color-cream: #f0e7d6;
+  --color-beige: #e5d6bf;
+  --color-champagne: #e8cf9e;
+  --color-gold: #b88a4b;
+  --color-gold-deep: #8a5a2b;
+  --color-plum: #4a2142;
+  --color-aubergine: #2b1535;
+  --color-night: #1a0c22;
+  --color-ink: #24161f;
+  --color-mist: #67555f;
+
+  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+
+  --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
+  --shadow-soft: 0 24px 60px -28px rgba(43, 21, 53, 0.35);
+  --shadow-gold: 0 0 0 1px rgba(184, 138, 75, 0.45), 0 18px 40px -22px rgba(184, 138, 75, 0.55);
+}
+
+html {
+  scroll-padding-top: 5.5rem;
+  background: var(--color-night);
+  -webkit-text-size-adjust: 100%;
+}
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-ink);
+  background: var(--color-ivory);
+  overflow-x: clip;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--color-champagne); color: var(--color-aubergine); }
+
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.on-dark :focus-visible { outline-color: var(--color-champagne); }
+
+.font-display { font-family: var(--font-display); font-optical-sizing: auto; }
+
+/* Hairline gold rule with a diamond, echoing the brochure's section dividers */
+.rule-gold {
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-gold), rgba(184, 138, 75, 0));
+}
+
+/* Scroll reveals: only hidden when JS is able to reveal them again */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  [data-reveal] { opacity: 0; transform: translateY(28px); }
+  [data-letter] { transform: translateY(112%); }
+  [data-hero-in] { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* Drawn-in underline used on links */
+.link-gold {
+  background: linear-gradient(currentColor, currentColor) left bottom / 0 1px no-repeat;
+  transition: background-size 0.5s var(--ease-lux);
+}
+.link-gold:hover, .link-gold:focus-visible { background-size: 100% 1px; }
+
+/* Light panels placed inside dark sections keep dark-on-light focus rings */
+.on-dark .on-light :focus-visible { outline-color: var(--color-gold-deep); }
